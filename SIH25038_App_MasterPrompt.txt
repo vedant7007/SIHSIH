@@ -1,0 +1,223 @@
+
+===========================
+SIH 25038 BLUE CARBON REGISTRY & MRV SYSTEM
+ULTIMATE MASTER PROMPT FOR CLAUDE (MONSTER LEGEND PRO MAX VERSION)
+===========================
+
+ROLE: You are an expert full-stack engineer, hackathon mentor, architect, AI/ML researcher, and blockchain dev. 
+TASK: Build a **mobile-first hackathon-ready application** for the Smart India Hackathon Problem Statement SIH 25038: 
+"Blockchain-Based Blue Carbon Registry & MRV System."
+
+The output must include **Flutter mobile app**, **NestJS backend**, **FastAPI AI microservice**, **Solidity ERC-1155 contract**, 
+and full **database schema, architecture diagrams (if possible), code scaffolds, and instructions**.
+
+This prompt is designed to be **100× more detailed than normal**, covering every angle (tech, UX, AI, blockchain, MRV, free infra). 
+Follow it step by step.
+
+--------------------------------------------------------------------
+# 1. CONTEXT & GOALS
+--------------------------------------------------------------------
+The app solves the challenge of monitoring blue carbon projects (mangroves, seagrass, coastal plantations). 
+NGOs upload plantation data, Admins verify with AI + satellite, credits are issued on blockchain, Buyers purchase responsibly. 
+System ensures trust, transparency, and decentralization.
+
+Goals:
+- End-to-end MVP demo (judge-friendly).
+- Mobile-first (field NGOs are target users).
+- Offline-first + multilingual.
+- AI verification + satellite NDVI integration (light but real).
+- Blockchain ERC-1155 registry with certificates.
+- Responsible buyer marketplace (caps + multiplier rule).
+- Polished UI/UX, storytelling demo.
+
+--------------------------------------------------------------------
+# 2. TECH STACK (WHY THESE, NOT OTHERS)
+--------------------------------------------------------------------
+MOBILE: Flutter 3, Riverpod, GoRouter, Dio, Drift (SQLite), WorkManager, Lottie.
+- Why Flutter: single codebase, beautiful UI, fast dev. RN rejected due to perf/fragmentation.
+- Drift > Hive/Isar: SQL needed for MRV analytics.
+
+BACKEND: NestJS + Prisma + PostgreSQL + PostGIS, Redis, MinIO.
+- Why NestJS > Express: structured, scalable, RBAC out of box.
+- Why Postgres > Mongo: relational, transactions, PostGIS for geo.
+- MinIO free S3; Redis for queues/websockets.
+
+AI: FastAPI, PyTorch/Tensorflow lite.
+- Tamper checks + classifier + context scoring.
+- Free libs only, no paid API.
+
+SATELLITE: Google Earth Engine (free). Sentinel-2 NDVI/NDWI.
+- Why not Sentinel Hub/Planet: paid.
+
+BLOCKCHAIN: Solidity ERC-1155 on Polygon Amoy testnet.
+- ERC-1155 > ERC-721: fungible within batch, partial retirements possible.
+- ERC-1155 > ERC-20: maintains project batch identity.
+
+--------------------------------------------------------------------
+# 3. SYSTEM ARCHITECTURE (BIG PICTURE)
+--------------------------------------------------------------------
+Modules:
+- Flutter App (NGO, Admin, Buyer dashboards).
+- Backend API (NestJS): auth, projects, reviews, credits, notifications.
+- AI Microservice (FastAPI): photo checks, scoring.
+- Satellite Worker (Python): fetch NDVI/NDWI.
+- Blockchain (Solidity ERC-1155): mint/retire credits.
+- Storage: MinIO for files, Postgres+PostGIS for DB, Redis for jobs.
+- Notifications: in-app (WebSockets), push (FCM).
+
+--------------------------------------------------------------------
+# 4. ROLES & FEATURES (FINALIZED)
+--------------------------------------------------------------------
+
+## NGO / Panchayat (Field Users)
+- **3-step form only:**
+  1) Location (GPS auto + polygon draw optional).
+  2) Plantation details (species dropdown, saplings, area auto-calc).
+  3) Photos (min 3) + optional voice input (speech-to-text).
+- Voice input multi-language (EN, HI, local).
+- Auto-credits estimation (area × factors).
+- Timeline status: Draft → Submitted → Under Review → Approved → Credits Issued.
+- Analytics: total area, credits earned, survival %.
+- Offline-first with sync.
+
+## Admin / Verifier (Boss Mode)
+- Home dashboard = AI report cards (authenticity, mangrove prob, context fit, NDVI sparkline, Confidence score).
+- 5-step review workflow:
+  1) Metadata check.
+  2) AI photo check.
+  3) Geo & satellite check.
+  4) Field visit mark.
+  5) Final approve/reject.
+- Analytics: infographic (projects count, credits, NGOs, fraud).
+- Comms: rework requests, feedback via in-app chat.
+- Approval triggers blockchain mint → credits issued + certificate.
+
+## Buyer / Company (Responsible)
+- Browse credits (filter by region/species).
+- Purchase caps + multiplier rule enforced.
+- KYC before purchase.
+- Buy → Retire credits → Certificate PDF (with QR + on-chain hash).
+- Portfolio view (retired credits, impact summary).
+
+--------------------------------------------------------------------
+# 5. AI SERVICE (PHOTO VERIFICATION)
+--------------------------------------------------------------------
+Pipeline:
+1) Integrity check: EXIF metadata, ELA heatmap, pHash duplicates.
+2) Content check: MobileNetV3 classifier (Mangrove vs Others).
+3) Context check: GPS vs polygon, timestamp plausibility.
+4) Output JSON:
+   {
+     authenticity: 0.86,
+     mangroveLikelihood: 0.91,
+     contextFit: 0.78,
+     confidence: 83,
+     issues: ["Missing EXIF in photo 3"]
+   }
+
+Admin UI displays this as **AI Report Card**.
+
+--------------------------------------------------------------------
+# 6. SATELLITE SERVICE (FREE NDVI/NDWI)
+--------------------------------------------------------------------
+Use Google Earth Engine API.
+- Inputs: project polygon, submission date.
+- Outputs: NDVI before (T-3m), NDVI after (T+1m), sparkline last 12 months.
+- Verdict: Improving / Stable / Declining.
+- Admin sees thumbnails + sparkline chip.
+
+--------------------------------------------------------------------
+# 7. BLOCKCHAIN TOKENIZATION
+--------------------------------------------------------------------
+Contract: ERC-1155 on Polygon Amoy testnet.
+- Functions:
+  mintCredits(projectId, amount);
+  retireCredits(projectId, amount, buyerId);
+- Events:
+  CreditsMinted(projectId, amount, txHash);
+  CreditsRetired(projectId, buyerId, amount, txHash).
+- Certificates:
+  PDF includes project info, credit amount, tx hash, QR link to explorer.
+
+--------------------------------------------------------------------
+# 8. NOTIFICATIONS & OFFLINE SYNC
+--------------------------------------------------------------------
+Notifications:
+- In-app notification center (bell icon, filters by type).
+- NGO timeline like WhatsApp (status changes).
+- Admin action queue.
+- Buyer purchase updates.
+
+Offline:
+- Drift/SQLite local storage.
+- Sync via WorkManager when online.
+- States: local_only / syncing / synced / conflict.
+
+--------------------------------------------------------------------
+# 9. DATA MODEL (PRISMA SCHEMA STYLE)
+--------------------------------------------------------------------
+Tables:
+User(id, role, org, phone, locale)
+Project(id, ngoId, geojson, area, species[], saplingCount, status, createdAt)
+Evidence(id, projectId, fileUrl, exif, hash)
+AIReport(id, projectId, authenticity, mangroveProb, contextFit, confidence, issues[])
+SatSnapshot(id, projectId, date, ndvi, ndwi, thumbUrl)
+CreditBatch(id, projectId, tokenId, amount, mintedTx)
+Retirement(id, buyerId, tokenId, amount, txHash, certUrl)
+Survey(id, projectId, date, survivalPct, growthStage, notes, evidenceIds[])
+AuditLog(id, actorId, action, before, after, ts)
+
+--------------------------------------------------------------------
+# 10. UI/UX GUIDELINES
+--------------------------------------------------------------------
+NGO app: 3-step forms, voice input, emojis/icons, offline badge.
+Admin app: professional dashboard, cards + stepper review.
+Buyer: simple marketplace, ethical purchase rules, clear certificates.
+Maps: OSM tiles with polygon draw + offline cache.
+Theme: green/blue nature-friendly, dark background, high contrast.
+Lottie animations: only for success/empty states.
+
+--------------------------------------------------------------------
+# 11. DEMO STORYLINE
+--------------------------------------------------------------------
+1. NGO submits (voice + photo). Offline sync works.
+2. Admin opens AI Report Card, reviews with 5-step workflow.
+3. Approves → Blockchain mint → credits issued.
+4. Buyer purchases → Retires credits → PDF certificate with QR.
+5. Transparency map shows approved projects.
+
+Judges see **trust + innovation + usability**.
+
+--------------------------------------------------------------------
+# 12. ROADMAP (DAY-WISE)
+--------------------------------------------------------------------
+Day 1–2: Auth, dashboards, NGO 3-step form (offline).
+Day 3–4: Admin review flow + AI mock integration.
+Day 5: Blockchain contract deploy + mint/retire + cert.
+Day 6: Buyer marketplace + portfolio.
+Day 7: Notifications + i18n.
+Day 8: Satellite demo integration (NDVI thumbnails).
+Day 9: UI polish, demo rehearsal, fallback handling.
+
+--------------------------------------------------------------------
+# 13. FUTURE SCOPE
+--------------------------------------------------------------------
+- SMS/email notifications.
+- ERC-721 per-batch NFT.
+- Advanced AI (survival detection, canopy segmentation).
+- IoT sensors integration.
+- NGO community leaderboard.
+
+--------------------------------------------------------------------
+# 14. NON-NEGOTIABLE MUST-HAVES (MVP SCOPE)
+--------------------------------------------------------------------
+- Role-based login.
+- NGO: 3-step form, voice input, offline sync.
+- Admin: AI report card, 5-step workflow, blockchain mint.
+- Buyer: cap + multiplier rule, retirement, certificate with QR.
+- Transparency map with approved projects.
+- In-app notifications.
+
+===========================
+END OF PROMPT
+===========================

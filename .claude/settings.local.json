@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter create:*)",
+      "Bash(npm init:*)",
+      "Bash(flutter:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(python:*)",
+      "Bash(npm run compile:*)",
+      "Bash(npm run test:*)",
+      "Bash(docker build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
