@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../auth/presentation/providers/auth_provider.dart';
 
@@ -23,6 +24,7 @@ class BuyerDashboard extends ConsumerWidget {
             icon: const Icon(Icons.logout),
             onPressed: () {
               ref.read(authProvider.notifier).logout();
+              context.go('/login');
             },
           ),
         ],
@@ -58,33 +60,54 @@ class BuyerDashboard extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Total Credits Retired'),
-                            Text(
-                              '1,250 tCO2e',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Total Credits Retired',
+                                style: TextStyle(fontSize: 13),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  '1,250 tCO2e',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text('Impact Score'),
-                            Text(
-                              'A+',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text(
+                                'Impact Score',
+                                style: TextStyle(fontSize: 13),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'A+',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -98,7 +121,7 @@ class BuyerDashboard extends ConsumerWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // Navigate to marketplace
+                      context.go('/marketplace');
                     },
                     icon: const Icon(Icons.shopping_cart),
                     label: const Text('Browse Credits'),
@@ -108,10 +131,38 @@ class BuyerDashboard extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // Navigate to portfolio
+                      context.go('/portfolio');
                     },
                     icon: const Icon(Icons.analytics),
                     label: const Text('View Portfolio'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      context.go('/certificates');
+                    },
+                    icon: const Icon(Icons.card_membership),
+                    label: const Text('Certificates'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      context.go('/notifications');
+                    },
+                    icon: const Icon(Icons.notifications),
+                    label: const Text('Notifications'),
                   ),
                 ),
               ],
@@ -178,7 +229,7 @@ class BuyerDashboard extends ConsumerWidget {
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      // Navigate to purchase page
+                      context.go('/marketplace');
                     },
                   ),
                 );

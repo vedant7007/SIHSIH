@@ -8,16 +8,20 @@ class AppRoutes {
 
   // NGO Routes
   static const String ngoProjectForm = '/ngo/project/new';
+  static const String projectSubmission = '/project-submission';
   static const String ngoProjectDetails = '/ngo/project/:id';
   static const String ngoAnalytics = '/ngo/analytics';
 
   // Admin Routes
   static const String adminReviews = '/admin/reviews';
   static const String adminProjectReview = '/admin/review/:id';
+  static const String projectReview = '/project-review/:id';
   static const String adminAnalytics = '/admin/analytics';
 
   // Buyer Routes
   static const String buyerMarketplace = '/buyer/marketplace';
+  static const String marketplace = '/marketplace';
+  static const String portfolio = '/portfolio';
   static const String buyerPortfolio = '/buyer/portfolio';
   static const String buyerPurchase = '/buyer/purchase/:id';
 

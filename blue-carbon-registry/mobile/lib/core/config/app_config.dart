@@ -1,4 +1,4 @@
-import 'package:workmanager/workmanager.dart';
+import 'package:flutter/foundation.dart';
 
 class AppConfig {
   static const String apiBaseUrl = 'http://localhost:3000/api';
@@ -9,41 +9,6 @@ class AppConfig {
   static const String rpcUrl = 'https://rpc-amoy.polygon.technology/';
 
   static Future<void> initialize() async {
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: true,
-    );
-  }
-}
-
-@pragma('vm:entry-point')
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) {
-    switch (task) {
-      case 'sync-offline-data':
-        return _syncOfflineData();
-      case 'periodic-sync':
-        return _periodicSync();
-      default:
-        return Future.value(true);
-    }
-  });
-}
-
-Future<bool> _syncOfflineData() async {
-  try {
-    // Implement offline data sync logic
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-Future<bool> _periodicSync() async {
-  try {
-    // Implement periodic sync logic
-    return true;
-  } catch (e) {
-    return false;
+    // App initialization complete
   }
 }

@@ -26,13 +26,11 @@ dependencies:
   path_provider: ^2.1.2
   path: ^1.8.3
 
-  # Background Tasks
-  workmanager: ^0.5.2
-
   # UI & Animations
   lottie: ^2.7.0
   flutter_svg: ^2.0.9
   cached_network_image: ^3.3.0
+  fl_chart: ^0.68.0
 
   # Location & Maps
   geolocator: ^10.1.0
@@ -42,10 +40,8 @@ dependencies:
 
   # Media & Files
   image_picker: ^1.0.7
-  file_picker: ^6.1.1
 
   # Speech & Localization
-  speech_to_text: ^6.6.0
   flutter_localizations:
     sdk: flutter
   intl: any
